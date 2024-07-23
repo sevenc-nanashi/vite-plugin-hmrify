@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <div class="app">
+      <div>
+        <h1>Vite Plugin HMRify</h1>
+        <div class="card">
+          <h2>Function HMR</h2>
+          <button id="counter1" type="button"></button>
+
+          <h2>Class HMR: Keep</h2>
+          <button id="counter2" type="button"></button>
+
+          <h2>Class HMR: Reconstruct</h2>
+          <button id="counter3" type="button"></button>
+        </div>
+        <p class="try-hmr">
+          Update code in `src/counter.ts` to try HMR
+        </p>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
