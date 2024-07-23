@@ -29,14 +29,23 @@ export default {
 
 Then, add reference of `vite-plugin-hmrify/client` in your `vite-env.d.ts`:
 
-```diff
+```typescript
  /// <reference types="vite/client" />
 +/// <reference types="vite-plugin-hmrify/client" />
 ```
 
-Then, wrap your exported class or function with `import.meta.hmrify`:
+Then, wrap your exported function or decorate your exported class with `import.meta.hmrify`:
+
+> [!NOTE]
+> You need `experimentalDecorators: true` to use the decorator syntax.
 
 ```typescript
+export const myFunction = import.meta.hmrify(
+  function myFunction() {
+    console.log("Hello, world!");
+  },
+);
+
 export const MyClass = import.meta.hmrify(
   class MyClass {
     constructor() {
@@ -45,11 +54,12 @@ export const MyClass = import.meta.hmrify(
   },
 );
 
-export const myFunction = import.meta.hmrify(
-  function myFunction() {
+@(import.meta.hmrify)
+class AnotherMyClass {
+  constructor() {
     console.log("Hello, world!");
-  },
-);
+  }
+}
 ```
 
 You can also add options to `import.meta.hmrify`:
@@ -65,6 +75,13 @@ export const MyClass = import.meta.hmrify(
     }
   },
 );
+
+@(import.meta.hmrify({ reconstruct: true }))
+class AnotherMyClass {
+  constructor() {
+    console.log("Hello, world!");
+  }
+}
 ```
 
 ## License

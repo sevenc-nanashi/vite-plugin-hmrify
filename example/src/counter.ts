@@ -1,5 +1,5 @@
 export const createCounterText = import.meta.hmrify(
-  (counter: number) => `count = ${counter} (function)`,
+  (counter: number) => `count is ${counter} (function)`,
 );
 
 class CounterTextCreator {
@@ -9,11 +9,8 @@ class CounterTextCreator {
   }
 }
 
-export const CounterTextCreatorWithoutReconstruct = import.meta.hmrify(
-  CounterTextCreator,
-);
+@(import.meta.hmrify)
+export class CounterTextCreatorWithoutReconstruct extends CounterTextCreator {}
 
-export const CounterTextCreatorWithReconstruct = import.meta.hmrify(
-  { reconstruct: true },
-  CounterTextCreator,
-);
+@(import.meta.hmrify({ reconstruct: true }))
+export class CounterTextCreatorWithReconstruct extends CounterTextCreator {}

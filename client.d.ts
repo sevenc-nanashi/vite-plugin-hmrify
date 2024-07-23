@@ -1,3 +1,17 @@
+type Options = {
+  /**
+   * Class only: Whether to reconstruct the class instance.
+   *
+   * If `true`, new instances will be created and existing instances' attributes will be
+   * overwritten with the new instances' attributes when hot-reloaded.
+   * If `false`, existing instances will be kept. Only prototype attributes will be updated.
+   *
+   * @see https://github.com/sevenc-nanashi/vite-plugin-hmrify/tree/main/example
+   *
+   * Default: `false`.
+   */
+  reconstruct?: boolean;
+};
 interface ImportMeta {
   /**
    * Makes a function or class hot-reloadable.
@@ -13,21 +27,14 @@ interface ImportMeta {
     ): T;
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     <T extends (new (...args: any[]) => any) | ((...args: any[]) => any)>(
-      options: {
-        /**
-         * Class only: Whether to reconstruct the class instance.
-         *
-         * If `true`, new instances will be created and existing instances' attributes will be
-         * overwritten with the new instances' attributes when hot-reloaded.
-         * If `false`, existing instances will be kept. Only prototype attributes will be updated.
-         *
-         * @see https://github.com/sevenc-nanashi/vite-plugin-hmrify/tree/main/example
-         *
-         * Default: `false`.
-         */
-        reconstruct?: boolean;
-      },
+      options: Partial<Options>,
       fn: T,
     ): T;
+    (
+      options: Partial<Options>,
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    ): <T extends (new (...args: any[]) => any) | ((...args: any[]) => any)>(
+      fn: T,
+    ) => T;
   };
 }

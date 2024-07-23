@@ -192,3 +192,24 @@ export const loaderSource = transformSync(
   .replace("export default ", "")
   .replace(/;$/, "")
   .replaceAll("**NONCE**", () => Math.random().toString(36).slice(2));
+
+declare const __hmrify_internal: typeof loaderFn;
+const decoratorLoader =
+  (name: string) =>
+  (optionOrTarget: AnyClass | AnyFunction | Partial<Options>) => {
+    if (typeof optionOrTarget === "function") {
+      return __hmrify_internal(name)(optionOrTarget);
+    }
+    return (target: AnyClass | AnyFunction) =>
+      __hmrify_internal(name)(optionOrTarget, target);
+  };
+
+export const decoratorLoaderSource = transformSync(
+  `export default ${decoratorLoader.toString()}`,
+  {
+    minify: true,
+  },
+)
+  .code.trim()
+  .replace("export default ", "")
+  .replace(/;$/, "");

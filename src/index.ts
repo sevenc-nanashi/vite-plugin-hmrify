@@ -1,5 +1,5 @@
 import type { Plugin } from "vite";
-import { loaderSource } from "./loader.js";
+import { decoratorLoaderSource, loaderSource } from "./loader.js";
 
 export const hmrify = (): Plugin[] => {
   return [
@@ -15,24 +15,52 @@ export const hmrify = (): Plugin[] => {
           return;
         }
 
-        const declaration = code
+        if (!code.includes("import.meta.hmrify")) {
+          return;
+        }
+
+        const hmrifyReplaced = code
           .replace(
-            /const(?<constNameSpace>\s+)(?<constName>\S+)(?<constValue>\s+=\s+)import\.meta\.hmrify\(/g,
-            (_match, constNameSpace, constName, constValue) => {
-              return `const${constNameSpace}${constName}${constValue}(${loaderSource})(${JSON.stringify(constName)})(`;
+            /export(?<exportSpace>\s+)const(?<constNameSpace>\s+)(?<constName>\S+)(?<constValue>\s+=\s+)import\.meta\.hmrify\(/g,
+            (_match, exportSpace, constNameSpace, constName, constValue) => {
+              return `export${exportSpace}const${constNameSpace}${constName}${constValue}__hmrify_internal(${JSON.stringify(constName)})(`;
             },
           )
           .replace(
             /export(?<exportSpace>\s+)default(?<defaultSpace>\s+)import\.meta\.hmrify\(/g,
             (_match, exportSpace, defaultSpace) => {
-              return `export${exportSpace}default${defaultSpace}(${loaderSource})('default')(`;
+              return `export${exportSpace}default${defaultSpace}(__hmrify_internal)('default')(`;
             },
           )
-          .replaceAll(
-            "import.meta.hmrify",
-            "(() => throw new Error('Unexpected import.meta.hmrify'))",
+          .replace(
+            /(?<name>\w+)(?<beforeDecorate>\s*=\s*)__decorateClass\(\[(?<before>(?:[\s\S]*?,)?\s*)import\.meta\.hmrify/g,
+            (_match, name, beforeDecorate, before) => {
+              return `${name}${beforeDecorate}__decorateClass([${before}(__hmrify_internal_decorator)(${JSON.stringify(name)})`;
+            },
           );
-        return { code: declaration, map: null };
+        if (hmrifyReplaced.includes("import.meta.hmrify")) {
+          this.error(
+            [
+              "import.meta.hmrify is not replaced completely, please check your code.",
+              "You may have used import.meta.hmrify in a way that is not supported.",
+              "You only can use import.meta.hmrify in one of the following ways:",
+              "- export const foo = import.meta.hmrify(/* { ... options ... }, */ () => {});",
+              "- export default import.meta.hmrify(/* { ... options ... }, */ () => {});",
+              "- export const foo = import.meta.hmrify(/* { ... options ... }, */ class Foo {});",
+              "- export default import.meta.hmrify(/* { ... options ... }, */ class Foo {});",
+              "- @(import.meta.hmrify/* ({ ... options ... }) */) export class Foo {}",
+              "- @(import.meta.hmrify/* ({ ... options ... }) */) export default class Foo {}",
+              hmrifyReplaced.includes("@(import.meta.hmrify") &&
+                "Hint: import.meta.hmrify cannot be used as a native decorator, have you set experimentalDecorators: true in your tsconfig.json?",
+            ]
+              .filter((line: string) => typeof line === "string")
+              .join("\n"),
+          );
+        }
+        return {
+          code: `var __hmrify_internal = ${loaderSource};var __hmrify_internal_decorator = ${decoratorLoaderSource};${hmrifyReplaced}`,
+          map: null,
+        };
       },
     },
     {
