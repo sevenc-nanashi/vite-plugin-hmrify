@@ -10,10 +10,10 @@ class CounterTextCreator {
 }
 
 export const CounterTextCreatorWithoutReconstruct = import.meta.hmrify(
-  { reconstruct: true },
   CounterTextCreator,
 );
 
 export const CounterTextCreatorWithReconstruct = import.meta.hmrify(
+  { reconstruct: true },
   CounterTextCreator,
 );
