@@ -61,7 +61,7 @@ export const MyClass = import.meta.hmrify(
 );
 
 @(import.meta.hmrify)
-class AnotherMyClass {
+export class AnotherMyClass {
   constructor() {
     console.log("Hello, world!");
   }
@@ -83,7 +83,7 @@ export const MyClass = import.meta.hmrify(
 );
 
 @(import.meta.hmrify({ reconstruct: true }))
-class AnotherMyClass {
+export class AnotherMyClass {
   constructor() {
     console.log("Hello, world!");
   }
