@@ -1,11 +1,11 @@
 export const createCounterText = import.meta.hmrify(
-  (counter: number) => `count is ${counter}`,
+  (counter: number) => `count = ${counter} (function)`,
 );
 
 class CounterTextCreator {
   constructor(public counter: number) {}
   createText() {
-    return `count is ${this.counter}`;
+    return `count = ${this.counter} (class)`;
   }
 }
 
