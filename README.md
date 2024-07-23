@@ -15,7 +15,7 @@ It does this by wrapping your class or function in a proxy that listens for chan
 npm install -D vite-plugin-hmrify
 ```
 
-Or you can install the development release. (powered by <pkg.pr.new>)
+Or you can install the development release. (powered by [pkg.pr.new](https://github.com/stackblitz-labs/pkg.pr.new))
 
 ```bash
 npm install -D https://pkg.pr.new/sevenc-nanashi/vite-plugin-hmrify@[the latest commit hash here]
