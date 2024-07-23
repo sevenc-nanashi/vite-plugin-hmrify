@@ -1,4 +1,4 @@
-import { Plugin } from "vite";
+import type { Plugin } from "vite";
 import { loaderSource } from "./loader.js";
 
 export const hmrify = (): Plugin[] => {
@@ -31,7 +31,7 @@ export const hmrify = (): Plugin[] => {
           .replaceAll(
             "import.meta.hmrify",
             "(() => throw new Error('Unexpected import.meta.hmrify'))",
-          )
+          );
         return { code: declaration, map: null };
       },
     },
@@ -47,11 +47,10 @@ export const hmrify = (): Plugin[] => {
           return;
         }
 
-        const declaration = code
-          .replaceAll(
-            "import.meta.hmrify",
-            "((...args) => args.at(-1))",
-          )
+        const declaration = code.replaceAll(
+          "import.meta.hmrify",
+          "((...args) => args.at(-1))",
+        );
         return { code: declaration, map: null };
       },
     },

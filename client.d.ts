@@ -7,9 +7,11 @@ interface ImportMeta {
    * @returns The hot-reloadable function or class.
    */
   hmrify: {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     <T extends (new (...args: any[]) => any) | ((...args: any[]) => any)>(
       fn: T,
     ): T;
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     <T extends (new (...args: any[]) => any) | ((...args: any[]) => any)>(
       options: {
         /**

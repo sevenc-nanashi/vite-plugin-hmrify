@@ -9,13 +9,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "lint": "biome lint && biome format",
+    "format": "biome format --write"
   },
-  "files": [
-    "dist",
-    "client.d.ts",
-    "package.json"
-  ],
+  "files": ["dist", "client.d.ts", "package.json"],
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -25,14 +23,16 @@
       "types": "./client.d.ts"
     }
   },
-  "keywords": [],
+  "keywords": ["vite"],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "vite": "^5.3.4"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.8.3",
     "@tsconfig/node20": "^20.1.4",
     "typescript": "^5.5.4"
-  }
+  },
+  "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e"
 }

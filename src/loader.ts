@@ -183,7 +183,7 @@ const loaderFn =
   };
 
 export const loaderSource = transformSync(
-  "export default " + loaderFn.toString(),
+  `export default ${loaderFn.toString()}`,
   {
     minify: true,
   },
