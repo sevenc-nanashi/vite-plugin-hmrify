@@ -35,7 +35,10 @@ export const hmrify = (): Plugin[] => {
           .replace(
             /(?<name>\w+)(?<beforeDecorate>\s*=\s*)__decorateClass\(\[(?<before>(?:[\s\S]*?,)?\s*)import\.meta\.hmrify/g,
             (_match, name, beforeDecorate, before) => {
-              return `${name}${beforeDecorate}__decorateClass([${before}(__hmrify_internal_decorator)(${JSON.stringify(name)})`;
+              const exportName = code.includes(` ${name} as default`)
+                ? "default"
+                : name;
+              return `${name}${beforeDecorate}__decorateClass([${before}(__hmrify_internal_decorator)(${JSON.stringify(exportName)})`;
             },
           );
         if (hmrifyReplaced.includes("import.meta.hmrify")) {
