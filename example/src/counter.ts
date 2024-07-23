@@ -14,6 +14,3 @@ export class CounterTextCreatorWithoutReconstruct extends CounterTextCreator {}
 
 @(import.meta.hmrify({ reconstruct: true }))
 export class CounterTextCreatorWithReconstruct extends CounterTextCreator {}
-
-@(import.meta.hmrify)
-export default class CounterTextCreator2 extends CounterTextCreator {}
