@@ -23,12 +23,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Set version
-        run: |
-          VERSION=$(jq -r .version package.json)
-          jq ".version = \"$VERSION.${{ github.run_number }}\"" package.json > package.json.tmp
-          mv package.json.tmp package.json
-
       - name: Build
         run: pnpm build
 
