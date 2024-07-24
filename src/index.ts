@@ -27,13 +27,13 @@ export const hmrify = (): Plugin[] => {
           .replace(
             /export(?<exportSpace>\s+)const(?<constNameSpace>\s+)(?<constName>\S+)(?<constValue>\s+=\s+)import\.meta\.hmrify\(/g,
             (_match, exportSpace, constNameSpace, constName, constValue) => {
-              return `export${exportSpace}const${constNameSpace}${constName}${constValue}__hmrify_internal(${JSON.stringify(constName)})(`;
+              return `export${exportSpace}const${constNameSpace}${constName}${constValue}__hmrify_loader(${JSON.stringify(constName)})(`;
             },
           )
           .replace(
             /export(?<exportSpace>\s+)default(?<defaultSpace>\s+)import\.meta\.hmrify\(/g,
             (_match, exportSpace, defaultSpace) => {
-              return `export${exportSpace}default${defaultSpace}(__hmrify_internal)('default')(`;
+              return `export${exportSpace}default${defaultSpace}(__hmrify_loader)('default')(`;
             },
           )
           .replace(
@@ -42,7 +42,7 @@ export const hmrify = (): Plugin[] => {
               const exportName = code.includes(` ${name} as default`)
                 ? "default"
                 : name;
-              return `${name}${beforeDecorate}__decorateClass([${before}(__hmrify_internal_decorator)(${JSON.stringify(exportName)})`;
+              return `${name}${beforeDecorate}__decorateClass([${before}(__hmrify_loader_decorator)(${JSON.stringify(exportName)})`;
             },
           );
         if (hmrifyReplaced.includes("import.meta.hmrify")) {
@@ -65,7 +65,7 @@ export const hmrify = (): Plugin[] => {
           );
         }
         return {
-          code: `var __hmrify_internal = ${loaderSource};var __hmrify_internal_decorator = ${decoratorLoaderSource};${hmrifyReplaced}`,
+          code: `var __hmrify_loader = ${loaderSource};var __hmrify_loader_decorator = ${decoratorLoaderSource};${hmrifyReplaced}`,
           map: null,
         };
       },
