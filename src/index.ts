@@ -1,5 +1,9 @@
 import type { Plugin } from "vite";
-import { decoratorLoaderSource, loaderSource } from "./loader.js";
+import {
+  decoratorLoaderSource,
+  loaderSource,
+  productionLoaderSource,
+} from "./loader.js";
 
 export const hmrify = (): Plugin[] => {
   return [
@@ -78,11 +82,11 @@ export const hmrify = (): Plugin[] => {
           return;
         }
 
-        const declaration = code.replaceAll(
+        const replaced = code.replaceAll(
           "import.meta.hmrify",
-          "((...args) => args.at(-1))",
+          `(${productionLoaderSource})`,
         );
-        return { code: declaration, map: null };
+        return { code: replaced, map: null };
       },
     },
   ];

@@ -7,6 +7,15 @@ type InternalFn = "__HMRIFY_INTERNAL_FN__";
 type Proxied<T> = T & Record<InternalFn, AnyFunction>;
 type Options = { reconstruct: boolean };
 
+const compileFunction = (fn: AnyFunction) => {
+  return transformSync(`export default ${fn.toString()}`, {
+    minify: true,
+  })
+    .code.trim()
+    .replace("export default", "")
+    .replace(/;$/, "");
+};
+
 const loaderFn =
   (name: string) =>
   (
@@ -182,16 +191,7 @@ const loaderFn =
     }
   };
 
-export const loaderSource = transformSync(
-  `export default ${loaderFn.toString()}`,
-  {
-    minify: true,
-  },
-)
-  .code.trim()
-  .replace("export default ", "")
-  .replace(/;$/, "")
-  .replaceAll("**NONCE**", () => Math.random().toString(36).slice(2));
+export const loaderSource = compileFunction(loaderFn);
 
 declare const __hmrify_internal: typeof loaderFn;
 const decoratorLoader =
@@ -204,12 +204,22 @@ const decoratorLoader =
       __hmrify_internal(name)(optionOrTarget, target);
   };
 
-export const decoratorLoaderSource = transformSync(
-  `export default ${decoratorLoader.toString()}`,
-  {
-    minify: true,
-  },
-)
-  .code.trim()
-  .replace("export default ", "")
-  .replace(/;$/, "");
+export const decoratorLoaderSource = compileFunction(decoratorLoader);
+
+const productionLoader = (
+  ...args:
+    | [options: Partial<Options>]
+    | [target: AnyClass | AnyFunction]
+    | [options: Partial<Options>, target: AnyClass | AnyFunction]
+) => {
+  if (args.length === 2) {
+    return args[1];
+  }
+  if (typeof args[0] === "function") {
+    return args[0];
+  }
+
+  return (target: AnyClass | AnyFunction) => target;
+};
+
+export const productionLoaderSource = compileFunction(productionLoader);
