@@ -11,7 +11,6 @@ It does this by wrapping your class or function in a proxy that listens for chan
 ## Installation
 
 ```bash
-# Note: This plugin is not released yet.
 npm install -D vite-plugin-hmrify
 ```
 
